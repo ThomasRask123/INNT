@@ -8,16 +8,17 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import TaskList from "./screens/TaskList";
 import TaskDetails from "./screens/TaskDetails";
 import Add_edit_task from "./screens/Add_edit_task";
-import CameraScreen from "./screens/CameraScreen"; // Import CameraScreen
+import CameraScreen from "./screens/CameraScreen";
 
-// Import the functions you need from the SDKs you need
+// importerer initializeApp og getApps fra firebase/app
 import { initializeApp, getApps } from "firebase/app";
 
-// Your web app's Firebase configuration
+// Firebase konfigurationsobjekt
 const firebaseConfig = {
   apiKey: "AIzaSyBGC7F3aNLev7zuzY_D1O6UvuqtZnzB8vY",
   authDomain: "godkend1-a0cf4.firebaseapp.com",
-  databaseURL: "https://godkend1-a0cf4-default-rtdb.europe-west1.firebasedatabase.app", 
+  databaseURL:
+    "https://godkend1-a0cf4-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "godkend1-a0cf4",
   storageBucket: "godkend1-a0cf4.appspot.com",
   messagingSenderId: "198182813324",
@@ -51,7 +52,7 @@ export default function App() {
           component={Add_edit_task}
           options={{ headerShown: null }}
         />
-        {/* Adding the Camera Screen to the stack */}
+
         <Stack.Screen
           name={"CameraScreen"}
           component={CameraScreen}
@@ -75,7 +76,7 @@ export default function App() {
             component={Add_edit_task}
             options={{ tabBarIcon: () => <Ionicons name="add" size={20} /> }}
           />
-          {/* Add a Tab for the Camera screen */}
+
           <Tab.Screen
             name={"Kamera"}
             component={CameraScreen}

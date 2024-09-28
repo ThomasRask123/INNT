@@ -25,9 +25,9 @@ function Add_edit_task({ navigation, route }) {
   const initialState = {
     taskDescription: "",
     assignee: "",
-    timeOfExecution: "", // Tidspunkt for udførelse
-    aproxTimeForTask: "", // Forventet tid for opgave
-    status: "", // Tilføj status
+    timeOfExecution: "", 
+    aproxTimeForTask: "", 
+    status: "", 
   };
 
   const [newTask, setNewTask] = useState(initialState);
@@ -221,6 +221,7 @@ function Add_edit_task({ navigation, route }) {
           />
         </View>
 
+        {/* Status (scroll menu) */}
         <View style={styles.row}>
           <Text style={styles.label}>Status</Text>
           <RNPickerSelect

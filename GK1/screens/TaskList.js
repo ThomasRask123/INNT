@@ -15,23 +15,22 @@ function TaskList({ navigation }) {
     const db = getDatabase();
     const tasksRef = ref(db, "Tasks");
 
-    // Use the 'onValue' function to listen for changes in the 'tasks' node
+    // Lyt efter ændringer i Tasks-noden
     onValue(tasksRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Tasks Object:", data);
       if (data) {
-        // If data exists, set it in the 'tasks' state
         setTasks(data);
       }
     });
 
-    // Clean up the listener when the component unmounts
+    // Returner en clean-up function, der fjerner event listeneren, når komponenten unmountes
     return () => {
       off(tasksRef);
     };
-  }, []); // The empty dependency array means this effect runs only once
+  }, []); // Tomt array betyder at useEffect kun kører ved første render
 
-  // Vi viser ingenting hvis der ikke er data
+  //  Hvis der ikke er nogen opgaver, vises en loading besked
   if (!tasks) {
     return <Text>Loading...</Text>;
   }
@@ -49,7 +48,7 @@ function TaskList({ navigation }) {
   return (
     <FlatList
       data={taskArray}
-      // Vi bruger taskKeys til at finde ID på den aktuelle task og returnerer dette som key, og giver det med som ID til taskListItem
+      // Bruger taskKeys til at finde ID på den aktuelle task og returnerer dette som key, og giver det med som ID til taskListItem
       keyExtractor={(item, index) => taskKeys[index]}
       renderItem={({ item, index }) => {
         return (
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 5,
     padding: 10,
-    backgroundColor: "#f9f9f9", // Baggrundsfarve for at adskille opgaverne
+    backgroundColor: "#f9f9f9", 
   },
   label: {
     fontWeight: "bold",
