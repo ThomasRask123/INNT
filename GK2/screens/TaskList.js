@@ -23,6 +23,7 @@ const TaskList = ({ navigation }) => {
         setTaskKeys(Object.keys(data));
       }
     });
+
     // Returner en clean-up function, der fjerner event listeneren, når komponenten unmountes
     return () => {
       off(tasksRef);
@@ -35,7 +36,7 @@ const TaskList = ({ navigation }) => {
   }
 
   const handleSelectTask = (id) => {
-    // Implementer din logik her
+    
   };
 
   const assignees = [...new Set(tasks.map(task => task.assignee))];
@@ -46,7 +47,7 @@ const TaskList = ({ navigation }) => {
 
   return (
     <View style={styles.wrapper}>
-      <Button title="Filter by Assignee" onPress={() => setModalVisible(true)} />
+      <Button title="Filtrer efter person" onPress={() => setModalVisible(true)} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -56,13 +57,13 @@ const TaskList = ({ navigation }) => {
         }}
       >
         <View style={styles.modalView}>
-          <Text style={styles.pickerLabel}>Filter by Assignee:</Text>
+          <Text style={styles.pickerLabel}>Filtrer efter person:</Text>
           <Picker
             selectedValue={selectedAssignee}
             onValueChange={(itemValue) => setSelectedAssignee(itemValue)}
             style={styles.picker}
           >
-            <Picker.Item label="All Assignees" value="" />
+            <Picker.Item label="Alle" value="" />
             {assignees.map((assignee, index) => (
               <Picker.Item key={index} label={assignee} value={assignee} />
             ))}
