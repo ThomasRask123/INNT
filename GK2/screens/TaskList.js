@@ -36,8 +36,14 @@ const TaskList = ({ navigation }) => {
   }
 
   const handleSelectTask = (id) => {
-    
-  };
+    // Find den valgte opgave ud fra id'et
+    const selectedTask = tasks.find(task => task.id === id);
+  
+    // Naviger til TaskDetails skærmen og send opgaven med som parameter
+    if (selectedTask) {
+      navigation.navigate('Task Details', { task: [id, selectedTask] });
+    }
+  };  
 
   const assignees = [...new Set(tasks.map(task => task.assignee))];
 
