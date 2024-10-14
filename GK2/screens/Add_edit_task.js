@@ -83,7 +83,7 @@ function Add_edit_task({ navigation, route }) {
         .then(() => {
           Alert.alert("Din info er nu opdateret");
           const task = newTask;
-          navigation.navigate("Task Details", { task });
+          navigation.navigate("Task List", { task });
         })
         .catch((error) => {
           console.error(`Error: ${error.message}`);
