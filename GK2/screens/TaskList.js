@@ -30,11 +30,6 @@ const TaskList = ({ navigation }) => {
     };
   }, []); // Tomt array betyder at useEffect kun kører ved første render
 
-  // Hvis der ikke er nogen opgaver, vises en loading besked
-  if (!tasks.length) {
-    return <Text>Loading...</Text>;
-  }
-
   const handleSelectTask = (id) => {
     
   };
@@ -47,7 +42,7 @@ const TaskList = ({ navigation }) => {
 
   return (
     <View style={styles.wrapper}>
-      <Button title="Filtrer efter person" onPress={() => setModalVisible(true)} />
+      <Button title="Vælg person" onPress={() => setModalVisible(true)} />
       <Modal
         animationType="slide"
         transparent={true}
@@ -57,7 +52,7 @@ const TaskList = ({ navigation }) => {
         }}
       >
         <View style={styles.modalView}>
-          <Text style={styles.pickerLabel}>Filtrer efter person:</Text>
+          <Text style={styles.pickerLabel}>Vælg person:</Text>
           <Picker
             selectedValue={selectedAssignee}
             onValueChange={(itemValue) => setSelectedAssignee(itemValue)}
