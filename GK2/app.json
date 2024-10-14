@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "GK2",
-    "slug": "GK2",
+    "name": "GK1",
+    "slug": "GK1",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,17 +12,13 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSCameraUsageDescription": "This app uses the camera to take photos."
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "permissions": ["CAMERA"]
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
