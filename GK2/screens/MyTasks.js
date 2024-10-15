@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Modal, Button } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
 import { getDatabase, ref, onValue, off } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
 const MyTasks = ({ navigation }) => {
   const [tasks, setTasks] = useState([]);
+  const [taskKeys, setTaskKeys] = useState([]);
+  const [selectedAssignee, setSelectedAssignee] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
   const [userName, setUserName] = useState('');
 
   useEffect(() => {
@@ -27,6 +31,7 @@ const MyTasks = ({ navigation }) => {
           .map(key => ({ ...data[key], id: key }))
           .filter(task => task.assignee === userName); // Filtrer opgaver baseret på brugerens navn
         setTasks(taskArray);
+        setTaskKeys(Object.keys(data));
       }
     });
 
@@ -35,6 +40,11 @@ const MyTasks = ({ navigation }) => {
       off(tasksRef);
     };
   }, [userName]); // Kør useEffect igen, hvis userName ændres
+
+  const handleSelectTask = (taskId) => {
+    const selectedTask = tasks.find(task => task.id === taskId);
+    navigation.navigate('TaskDetails', { task: selectedTask });
+  };
 
   // Hvis der ikke er nogen opgaver, vises en loading besked
   if (!tasks.length) {
@@ -47,17 +57,65 @@ const MyTasks = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}
+      >
+        <View style={styles.modalView}>
+          <Picker
+            selectedValue={selectedAssignee}
+            onValueChange={(itemValue) => setSelectedAssignee(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Alle" value="" />
+            {tasks.map((task, index) => (
+              <Picker.Item key={index} label={task.assignee} value={task.assignee} />
+            ))}
+          </Picker>
+          <Button title="Done" onPress={() => setModalVisible(false)} />
+        </View>
+      </Modal>
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => navigation.navigate('TaskDetails', { taskId: item.id })}>
-            <View style={styles.taskItem}>
-              <Text style={styles.taskTitle}>{item.title}</Text>
-              <Text style={styles.taskAssignee}>Assigned to: {item.assignee}</Text>
-            </View>
-          </TouchableOpacity>
-        )}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity
+              style={styles.taskItem}
+              onPress={() => handleSelectTask(item.id)}
+            >
+              <View style={styles.taskItem}>
+                {/* Opgavebeskrivelse */}
+                <Text style={styles.label}>
+                  Opgavebeskrivelse:{" "}
+                  <Text style={styles.value}>{item.taskDescription}</Text>
+                </Text>
+                {/* Tildelt person */}
+                <Text style={styles.label}>
+                  Tildelt person: <Text style={styles.value}>{item.assignee}</Text>
+                </Text>
+                {/* Tidspunkt for udførelse */}
+                <Text style={styles.label}>
+                  Tidspunkt for udførelse:{" "}
+                  <Text style={styles.value}>{item.timeOfExecution}</Text>
+                </Text>
+                {/* Status */}
+                <Text style={styles.label}>
+                  Status: <Text style={styles.value}>{item.status}</Text>
+                </Text>
+                {/* Estimeret tid */}
+                <Text style={styles.label}>
+                  Estimeret tid:{" "}
+                  <Text style={styles.value}>{item.aproxTimeForTask} mins</Text>
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        }}
       />
     </View>
   );
@@ -67,18 +125,47 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#fff',
   },
   taskItem: {
     padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    marginVertical: 8,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    backgroundColor: '#f9f9f9',
   },
-  taskTitle: {
-    fontSize: 18,
+  label: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#333',
   },
-  taskAssignee: {
+  value: {
     fontSize: 14,
     color: '#555',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  pickerLabel: {
+    fontSize: 16,
+    marginBottom: 5,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
   },
 });
 
