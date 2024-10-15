@@ -21,7 +21,7 @@ function TaskDetails({ route, navigation }) {
     const task = route.params.task;
     navigation.navigate("Edit Task", { task });
   };
-
+ 
   const confirmDelete = () => {
     // Vi spørger brugeren om han er sikker
     if (Platform.OS === "ios" || Platform.OS === "android") {

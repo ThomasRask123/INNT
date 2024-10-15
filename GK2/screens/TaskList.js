@@ -41,7 +41,7 @@ const TaskList = ({ navigation }) => {
   
     // Naviger til TaskDetails skærmen og send opgaven med som parameter
     if (selectedTask) {
-      navigation.navigate('Task Details', { task: [id, selectedTask] });
+      navigation.navigate('TaskDetails', { task: [id, selectedTask] });
     }
   };  
 

@@ -47,7 +47,7 @@ const HomeTabs = () => (
     <Tab.Screen name="TaskList" component={TaskList} />
     <Tab.Screen name="AddEditTask" component={Add_edit_task} />
     <Tab.Screen name="Camera" component={CameraScreen} />
-    {/* <Tab.Screen name="MyTasks" component={MyTasks} /> Tilføj den nye skærm som en Tab.Screen */}
+    <Tab.Screen name="MyTasks" component={MyTasks} /> 
   </Tab.Navigator>
 );
 
