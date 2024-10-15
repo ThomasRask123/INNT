@@ -103,15 +103,21 @@ const MyTasks = ({ navigation }) => {
                   Tidspunkt for udførelse:{" "}
                   <Text style={styles.value}>{item.timeOfExecution}</Text>
                 </Text>
-                {/* Status */}
-                <Text style={styles.label}>
-                  Status: <Text style={styles.value}>{item.status}</Text>
-                </Text>
                 {/* Estimeret tid */}
                 <Text style={styles.label}>
                   Estimeret tid:{" "}
-                  <Text style={styles.value}>{item.aproxTimeForTask} mins</Text>
+                  <Text style={styles.value}>{item.aproxTimeForTask} minutter</Text>
                 </Text>
+                <Text style={styles.label}>
+                Status:{" "}
+                <Text style={styles.value}>
+                  {item.status === "not_started"
+                    ? "Ikke startet"
+                    : item.status === "in_progress"
+                      ? "I gang"
+                      : "Afsluttet"}
+                </Text>
+              </Text>
               </View>
             </TouchableOpacity>
           );
