@@ -5,16 +5,15 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
-// Skærme importeres her
 import TaskList from "./screens/TaskList";
 import TaskDetails from "./screens/TaskDetails";
 import Add_edit_task from "./screens/Add_edit_task";
 import CameraScreen from "./screens/CameraScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
+import MyTasks from "./screens/MyTasks"; // Importer den nye skærm
 
-// Firebase moduler importeres
-import { initializeApp, getApps } from "firebase/app"; // Korrekt import af getApps
+import { initializeApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
@@ -48,6 +47,7 @@ const HomeTabs = () => (
     <Tab.Screen name="TaskList" component={TaskList} />
     <Tab.Screen name="AddEditTask" component={Add_edit_task} />
     <Tab.Screen name="Camera" component={CameraScreen} />
+    <Tab.Screen name="MyTasks" component={MyTasks} /> {/* Tilføj den nye skærm som en Tab.Screen */}
   </Tab.Navigator>
 );
 

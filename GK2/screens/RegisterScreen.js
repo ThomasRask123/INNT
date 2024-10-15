@@ -4,6 +4,8 @@ import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
 const RegisterScreen = () => {
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -16,6 +18,8 @@ const RegisterScreen = () => {
         // Registered
         const user = userCredential.user;
         console.log('User registered:', user);
+        console.log('Name:', name);
+        console.log('Phone:', phone);
         navigation.navigate('Login');
       })
       .catch((error) => {
@@ -28,6 +32,18 @@ const RegisterScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Register</Text>
       {error ? <Text style={styles.error}>{error}</Text> : null}
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Phone"
+        value={phone}
+        onChangeText={setPhone}
+      />
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -54,22 +70,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    padding: 20,
+    padding: 16,
   },
   title: {
     fontSize: 24,
-    marginBottom: 20,
+    marginBottom: 16,
+    textAlign: 'center',
   },
   input: {
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
+    marginBottom: 12,
+    paddingHorizontal: 8,
   },
   error: {
     color: 'red',
-    marginBottom: 20,
+    marginBottom: 16,
+    textAlign: 'center',
   },
 });
 
