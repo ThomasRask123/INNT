@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { CameraType, Camera } from 'expo-camera';
+import { CameraType, Camera } from 'expo-camera/legacy';
 
 const CameraScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
@@ -52,16 +52,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'transparent',
     flexDirection: 'row',
-    margin: 20,
+    justifyContent: 'center',  // Center button horizontally
+    alignItems: 'flex-end',  // Position button at the bottom
+    marginBottom: 30,  // Add some margin from the bottom
   },
   button: {
-    flex: 0.1,
-    alignSelf: 'flex-end',
+    backgroundColor: '#fff',  // White background for the button
+    padding: 10,
+    borderRadius: 50,  // Rounded corners for the button
     alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,  // Add elevation for a shadow effect on Android
   },
   text: {
     fontSize: 18,
-    color: 'white',
+    color: 'black',
+    fontWeight: 'bold',
   },
 });
 
