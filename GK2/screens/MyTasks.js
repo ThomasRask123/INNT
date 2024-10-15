@@ -41,10 +41,15 @@ const MyTasks = ({ navigation }) => {
     };
   }, [userName]); // Kør useEffect igen, hvis userName ændres
 
-  const handleSelectTask = (taskId) => {
-    const selectedTask = tasks.find(task => task.id === taskId);
-    navigation.navigate('TaskDetails', { task: selectedTask });
-  };
+  const handleSelectTask = (id) => {
+    // Find den valgte opgave ud fra id'et
+    const selectedTask = tasks.find(task => task.id === id);
+  
+    // Naviger til TaskDetails skærmen og send opgaven med som parameter
+    if (selectedTask) {
+      navigation.navigate('TaskDetails', { task: [id, selectedTask] });
+    }
+  };  
 
   // Hvis der ikke er nogen opgaver, vises en loading besked
   if (!tasks.length) {
@@ -56,39 +61,16 @@ const MyTasks = ({ navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}
-      >
-        <View style={styles.modalView}>
-          <Picker
-            selectedValue={selectedAssignee}
-            onValueChange={(itemValue) => setSelectedAssignee(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Alle" value="" />
-            {tasks.map((task, index) => (
-              <Picker.Item key={index} label={task.assignee} value={task.assignee} />
-            ))}
-          </Picker>
-          <Button title="Done" onPress={() => setModalVisible(false)} />
-        </View>
-      </Modal>
+    <View style={styles.wrapper}>
       <FlatList
         data={tasks}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => {
           return (
             <TouchableOpacity
-              style={styles.taskItem}
               onPress={() => handleSelectTask(item.id)}
             >
-              <View style={styles.taskItem}>
+              <View style={styles.container}>
                 {/* Opgavebeskrivelse */}
                 <Text style={styles.label}>
                   Opgavebeskrivelse:{" "}
@@ -128,34 +110,43 @@ const MyTasks = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  wrapper: {
+    flex: 1,
+    padding: 10,
+  },
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderRadius: 10,
+    margin: 5,
+    padding: 10,
+    backgroundColor: "#f9f9f9", 
   },
   taskItem: {
-    padding: 16,
-    marginVertical: 8,
+    padding: 10,
+    marginVertical: 5,
     borderWidth: 1,
     borderColor: '#ddd',
-    borderRadius: 8,
+    borderRadius: 10,
     backgroundColor: '#f9f9f9',
   },
   label: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    fontSize: 16,
+    marginBottom: 5,
   },
   value: {
-    fontSize: 14,
-    color: '#555',
+    fontWeight: "normal",
+    fontSize: 16,
   },
   modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 35,
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: 'white',
+    margin: 20,
+    padding: 35,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
