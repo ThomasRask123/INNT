@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 
 const RegisterScreen = () => {
@@ -20,7 +20,17 @@ const RegisterScreen = () => {
         console.log('User registered:', user);
         console.log('Name:', name);
         console.log('Phone:', phone);
-        navigation.navigate('Login');
+
+        // Update displayName
+        updateProfile(user, {
+          displayName: name,
+        }).then(() => {
+          console.log('Display name set:', name);
+          navigation.navigate('Login');
+        }).catch((error) => {
+          console.error('Error setting display name:', error);
+          setError(error.message);
+        });
       })
       .catch((error) => {
         console.error('Error registering:', error);
@@ -49,6 +59,7 @@ const RegisterScreen = () => {
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
+        keyboardType="email-address"
       />
       <TextInput
         style={styles.input}
@@ -58,10 +69,6 @@ const RegisterScreen = () => {
         secureTextEntry
       />
       <Button title="Register" onPress={handleRegister} />
-      <Button
-        title="Back to Login"
-        onPress={() => navigation.navigate('Login')}
-      />
     </View>
   );
 };
