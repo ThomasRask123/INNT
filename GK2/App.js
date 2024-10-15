@@ -9,9 +9,13 @@ import TaskList from "./screens/TaskList";
 import TaskDetails from "./screens/TaskDetails";
 import Add_edit_task from "./screens/Add_edit_task";
 import CameraScreen from "./screens/CameraScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
-// importerer initializeApp og getApps fra firebase/app
+// Importer nødvendige Firebase Auth-funktioner og AsyncStorage
 import { initializeApp, getApps } from "firebase/app";
+import { initializeAuth, getReactNativePersistence } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Firebase konfigurationsobjekt
 const firebaseConfig = {
@@ -25,71 +29,36 @@ const firebaseConfig = {
   appId: "1:198182813324:web:21576941f3bc2ee563c5a9",
 };
 
+if (getApps().length < 1) {
+  const app = initializeApp(firebaseConfig);
+  initializeAuth(app, {
+    persistence: getReactNativePersistence(AsyncStorage),
+  });
+  console.log("Firebase On!");
+}
+
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
+
+const HomeTabs = () => (
+  <Tab.Navigator>
+    <Tab.Screen name="TaskList" component={TaskList} />
+    <Tab.Screen name="AddEditTask" component={Add_edit_task} />
+    <Tab.Screen name="Camera" component={CameraScreen} />
+  </Tab.Navigator>
+);
+
 export default function App() {
-  if (getApps().length < 1) {
-    initializeApp(firebaseConfig);
-    console.log("Firebase On!");
-  }
-
-  const Stack = createStackNavigator();
-  const Tab = createBottomTabNavigator();
-
-  const StackNavigation = () => {
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name={"Task List"}
-          component={TaskList}
-          options={{ headerShown: null }}
-        />
-        <Stack.Screen
-          name={"Task Details"}
-          component={TaskDetails}
-          options={{ headerShown: null }}
-        />
-        <Stack.Screen
-          name={"Edit Task"}
-          component={Add_edit_task}
-          options={{ headerShown: null }}
-        />
-
-        <Stack.Screen
-          name={"CameraScreen"}
-          component={CameraScreen}
-          options={{ headerShown: null }}
-        />
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
+        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="TaskDetails" component={TaskDetails} />
       </Stack.Navigator>
-    );
-  };
-
-  const BottomNavigation = () => {
-    return (
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen
-            name={"Hustanden"}
-            component={StackNavigation}
-            options={{ tabBarIcon: () => <Ionicons name="home" size={20} /> }}
-          />
-          <Tab.Screen
-            name={"Tilføj opgave"}
-            component={Add_edit_task}
-            options={{ tabBarIcon: () => <Ionicons name="add" size={20} /> }}
-          />
-
-          <Tab.Screen
-            name={"Kamera"}
-            component={CameraScreen}
-            options={{
-              tabBarIcon: () => <Ionicons name="camera-outline" size={20} />,
-            }}
-          />
-        </Tab.Navigator>
-      </NavigationContainer>
-    );
-  };
-
-  return <BottomNavigation />;
+    </NavigationContainer>
+  );
 }
 
 const styles = StyleSheet.create({
