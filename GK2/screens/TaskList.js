@@ -8,13 +8,16 @@ const TaskList = ({ navigation }) => {
   const [taskKeys, setTaskKeys] = useState([]);
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); // State for refresh
 
   useEffect(() => {
+    fetchTasks();
+  }, []); // Tomt array betyder at useEffect kun kører ved første render
+
+  const fetchTasks = () => {
     const db = getDatabase();
     const tasksRef = ref(db, "Tasks");
 
-    // Lyt efter ændringer i Tasks-noden
     onValue(tasksRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Tasks Object:", data);
@@ -25,11 +28,17 @@ const TaskList = ({ navigation }) => {
       }
     });
 
-    // Returner en clean-up function, der fjerner event listeneren, når komponenten unmountes
     return () => {
       off(tasksRef);
     };
-  }, []); // Tomt array betyder at useEffect kun kører ved første render
+  };
+
+  // Funksjon for pull-to-refresh
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchTasks(); // Genindlæs data
+    setRefreshing(false);
+  };
 
   // Hvis der ikke er nogen opgaver, vises en loading besked
   if (!tasks.length) {
@@ -37,10 +46,8 @@ const TaskList = ({ navigation }) => {
   }
 
   const handleSelectTask = (id) => {
-    // Find den valgte opgave ud fra id'et
     const selectedTask = tasks.find(task => task.id === id);
-  
-    // Naviger til TaskDetails skærmen og send opgaven med som parameter
+
     if (selectedTask) {
       navigation.navigate('Detaljer', { task: [id, selectedTask] });
     }
@@ -87,26 +94,21 @@ const TaskList = ({ navigation }) => {
               style={styles.container}
               onPress={() => handleSelectTask(item.id)}
             >
-              {/* Opgavebeskrivelse */}
               <Text style={styles.label}>
                 Opgavebeskrivelse:{" "}
                 <Text style={styles.value}>{item.taskDescription}</Text>
               </Text>
-              {/* Tildelt person */}
               <Text style={styles.label}>
                 Tildelt person: <Text style={styles.value}>{item.assignee}</Text>
               </Text>
-              {/* Tidspunkt for udførelse */}
               <Text style={styles.label}>
                 Tidspunkt for udførelse:{" "}
                 <Text style={styles.value}>{item.timeOfExecution}</Text>
               </Text>
-              {/* Forventet tid for opgave */}
               <Text style={styles.label}>
                 Forventet tid for opgave:{" "}
                 <Text style={styles.value}>{item.aproxTimeForTask} minutter</Text>
               </Text>
-              {/* Status */}
               <Text style={styles.label}>
                 Status:{" "}
                 <Text style={styles.value}>
@@ -120,6 +122,12 @@ const TaskList = ({ navigation }) => {
             </TouchableOpacity>
           );
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh} // Funksjon til pull-to-refresh
+          />
+        }
       />
     </View>
   );

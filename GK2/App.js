@@ -12,7 +12,8 @@ import Add_edit_task from "./screens/Add_edit_task";
 import CameraScreen from "./screens/CameraScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import MyTasks from "./screens/MyTasks"; 
+import MyTasks from "./screens/MyTasks";
+import AiChatScreen from './screens/AiChatScreen';
 
 // Importer Firebase
 import { initializeApp, getApps } from "firebase/app";
@@ -48,8 +49,8 @@ const HomeTabs = () => (
   <Tab.Navigator>
     <Tab.Screen name="Hustandens opgaver" component={TaskList} />
     <Tab.Screen name="Tilføj opgaver" component={Add_edit_task} />
-    {/* <Tab.Screen name="Kamera" component={CameraScreen} /> */}
-    <Tab.Screen name="Mine opgaver" component={MyTasks} /> 
+    <Tab.Screen name="Mine opgaver" component={MyTasks} />
+    <Tab.Screen name="Chat" component={AiChatScreen} />
   </Tab.Navigator>
 );
 

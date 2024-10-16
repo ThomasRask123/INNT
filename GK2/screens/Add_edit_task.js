@@ -9,6 +9,7 @@ import {
   Image,
   View,
   Text,
+  RefreshControl, // Tilføjet RefreshControl
 } from "react-native";
 import { getDatabase, ref, push, update } from "firebase/database";
 import RNPickerSelect from "react-native-picker-select";
@@ -32,6 +33,7 @@ function Add_edit_task({ navigation, route }) {
   };
 
   const [newTask, setNewTask] = useState(initialState);
+  const [refreshing, setRefreshing] = useState(false); // Tilføjet refreshing state
 
   const isEditTask = route.name === "Rediger opgave";
 
@@ -44,6 +46,13 @@ function Add_edit_task({ navigation, route }) {
       setNewTask((prevTask) => ({ ...prevTask, photoUri: route.params.photoUri }));
     }
   }, [isEditTask, route.params]);
+
+  // Funktion for at nulstille formularen ved pull-to-refresh
+  const onRefresh = () => {
+    setRefreshing(true);
+    setNewTask(initialState); // Nulstil felterne til initial tilstand
+    setRefreshing(false);
+  };
 
   const handleSave = async () => {
     if (isEditTask && route.params?.task) {
@@ -137,7 +146,11 @@ function Add_edit_task({ navigation, route }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} /> // Pull-to-refresh kontrol
+        }
+      >
         <Text style={styles.header}>
           {isEditTask ? "Rediger Opgave" : "Tilføj Ny Opgave"}
         </Text>

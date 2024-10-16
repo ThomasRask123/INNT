@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Modal, Button } from 'react-native';
-import { Picker } from '@react-native-picker/picker';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, RefreshControl } from 'react-native';
 import { getDatabase, ref, onValue, off } from "firebase/database";
 import { getAuth } from "firebase/auth";
 
@@ -10,8 +9,13 @@ const MyTasks = ({ navigation }) => {
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [userName, setUserName] = useState('');
+  const [refreshing, setRefreshing] = useState(false); // State for pull-to-refresh
 
   useEffect(() => {
+    fetchTasks();
+  }, [userName]); // Kør useEffect igen, hvis userName ændres
+
+  const fetchTasks = () => {
     const auth = getAuth();
     const user = auth.currentUser;
 
@@ -22,7 +26,6 @@ const MyTasks = ({ navigation }) => {
     const db = getDatabase();
     const tasksRef = ref(db, "Tasks");
 
-    // Lyt efter ændringer i Tasks-noden
     onValue(tasksRef, (snapshot) => {
       const data = snapshot.val();
       console.log("Tasks Object:", data);
@@ -35,11 +38,17 @@ const MyTasks = ({ navigation }) => {
       }
     });
 
-    // Returner en clean-up function, der fjerner event listeneren, når komponenten unmountes
     return () => {
       off(tasksRef);
     };
-  }, [userName]); // Kør useEffect igen, hvis userName ændres
+  };
+
+  // Funktion for pull-to-refresh
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchTasks(); // Genindlæs opgaver
+    setRefreshing(false);
+  };
 
   const handleSelectTask = (id) => {
     // Find den valgte opgave ud fra id'et
@@ -104,6 +113,12 @@ const MyTasks = ({ navigation }) => {
             </TouchableOpacity>
           );
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh} // Funktion til pull-to-refresh
+          />
+        }
       />
     </View>
   );
@@ -138,31 +153,6 @@ const styles = StyleSheet.create({
   value: {
     fontWeight: "normal",
     fontSize: 16,
-  },
-  modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    margin: 20,
-    padding: 35,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  pickerLabel: {
-    fontSize: 16,
-    marginBottom: 5,
-  },
-  picker: {
-    height: 50,
-    width: '100%',
   },
 });
 
