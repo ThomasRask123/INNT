@@ -1,20 +1,22 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import { createStackNavigator } from "@react-navigation/stack";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
-import Ionicons from "react-native-vector-icons/Ionicons";
+// Importere de nødvendige biblioteker
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
+// Importer skærme
 import TaskList from "./screens/TaskList";
 import TaskDetails from "./screens/TaskDetails";
 import Add_edit_task from "./screens/Add_edit_task";
 import CameraScreen from "./screens/CameraScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
-import MyTasks from "./screens/MyTasks"; // Importer den nye skærm
+import MyTasks from "./screens/MyTasks"; 
 
+// Importer Firebase
 import { initializeApp, getApps } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 
@@ -52,13 +54,50 @@ const HomeTabs = () => (
 );
 
 export default function App() {
+  const [userName, setUserName] = useState('');
+  const auth = getAuth();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserName(user.displayName || user.email); // Brug displayName hvis tilgængelig, ellers email
+      } else {
+        setUserName(''); // Nulstil brugerens navn, hvis der ikke er nogen bruger
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, [auth]);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Opret" component={RegisterScreen} />
-        <Stack.Screen name="Hjem" component={HomeTabs} />
-        <Stack.Screen name="Detaljer" component={TaskDetails} />
+        <Stack.Screen 
+          name="Login" 
+          component={LoginScreen} 
+        />
+        <Stack.Screen 
+          name="Opret" 
+          component={RegisterScreen} 
+        />
+        <Stack.Screen 
+          name="Hjem" 
+          component={HomeTabs} 
+          options={{
+            headerRight: () => (
+              <Text style={styles.userName}>{userName}</Text>
+            ),
+          }}
+        />
+        <Stack.Screen 
+          name="Detaljer" 
+          component={TaskDetails} 
+        />
+        <Stack.Screen 
+          name="Edit Task" 
+          component={Add_edit_task} 
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -67,8 +106,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+  },
+  userName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginRight: 10,
   },
 });
