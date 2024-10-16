@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
   StyleSheet,
   TextInput,
   Button,
   Alert,
   ScrollView,
   SafeAreaView,
+  Image,
+  View,
+  Text,
 } from "react-native";
-import { useEffect, useState } from "react";
 import { getDatabase, ref, push, update } from "firebase/database";
 import RNPickerSelect from "react-native-picker-select";
 
@@ -25,9 +25,10 @@ function Add_edit_task({ navigation, route }) {
   const initialState = {
     taskDescription: "",
     assignee: "",
-    timeOfExecution: "", 
-    aproxTimeForTask: "", 
-    status: "", 
+    timeOfExecution: "",
+    aproxTimeForTask: "",
+    status: "",
+    photoUri: null,
   };
 
   const [newTask, setNewTask] = useState(initialState);
@@ -35,55 +36,22 @@ function Add_edit_task({ navigation, route }) {
   const isEditTask = route.name === "Edit Task";
 
   useEffect(() => {
-    if (isEditTask) {
+    if (isEditTask && route.params?.task) {
       const task = route.params.task[1];
       setNewTask(task);
     }
-
-    return () => {
-      setNewTask(initialState);
-    };
-  }, []);
-
-  const changeTextInput = (name, event) => {
-    setNewTask({ ...newTask, [name]: event });
-  };
+    if (route.params?.photoUri) {
+      setNewTask((prevTask) => ({ ...prevTask, photoUri: route.params.photoUri }));
+    }
+  }, [isEditTask, route.params]);
 
   const handleSave = async () => {
-    const {
-      taskDescription,
-      assignee,
-      timeOfExecution,
-      aproxTimeForTask,
-      status,
-    } = newTask;
-
-    if (
-      taskDescription.length === 0 ||
-      assignee.length === 0 ||
-      timeOfExecution.length === 0 ||
-      aproxTimeForTask.length === 0 ||
-      status.length === 0
-    ) {
-      return Alert.alert("Et af felterne er tomme!");
-    }
-
-    if (isEditTask) {
-      const id = route.params.task[0];
-      const taskRef = ref(db, `Tasks/${id}`);
-      const updatedFields = {
-        taskDescription,
-        assignee,
-        timeOfExecution,
-        aproxTimeForTask,
-        status,
-      };
-
-      await update(taskRef, updatedFields)
+    if (isEditTask && route.params?.task) {
+      const taskId = route.params.task[0];
+      update(ref(db, `Tasks/${taskId}`), newTask)
         .then(() => {
-          Alert.alert("Din info er nu opdateret");
-          const task = newTask;
-          navigation.navigate("Hustandens opgaver", { task });
+          Alert.alert("Success", "Task updated successfully");
+          navigation.goBack();
         })
         .catch((error) => {
           console.error(`Error: ${error.message}`);
@@ -91,11 +59,12 @@ function Add_edit_task({ navigation, route }) {
     } else {
       const tasksRef = ref(db, "/Tasks/");
       const newTaskData = {
-        taskDescription,
-        assignee,
-        timeOfExecution,
-        aproxTimeForTask,
-        status,
+        taskDescription: newTask.taskDescription,
+        assignee: newTask.assignee,
+        timeOfExecution: newTask.timeOfExecution,
+        aproxTimeForTask: newTask.aproxTimeForTask,
+        status: newTask.status,
+        photoUri: newTask.photoUri,
       };
 
       await push(tasksRef, newTaskData)
@@ -178,7 +147,7 @@ function Add_edit_task({ navigation, route }) {
           <Text style={styles.label}>Opgave beskrivelse</Text>
           <TextInput
             value={newTask.taskDescription}
-            onChangeText={(event) => changeTextInput("taskDescription", event)}
+            onChangeText={(event) => setNewTask({ ...newTask, taskDescription: event })}
             placeholder="Indtast opgave beskrivelse"
             style={styles.input}
           />
@@ -189,7 +158,7 @@ function Add_edit_task({ navigation, route }) {
           <Text style={styles.label}>Tildelt person</Text>
           <TextInput
             value={newTask.assignee}
-            onChangeText={(event) => changeTextInput("assignee", event)}
+            onChangeText={(event) => setNewTask({ ...newTask, assignee: event })}
             placeholder="Indtast tildelt person"
             style={styles.input}
           />
@@ -199,101 +168,99 @@ function Add_edit_task({ navigation, route }) {
         <View style={styles.row}>
           <Text style={styles.label}>Tidspunkt for udførelse</Text>
           <RNPickerSelect
-            onValueChange={(value) => changeTextInput("timeOfExecution", value)}
+            onValueChange={(value) => setNewTask({ ...newTask, timeOfExecution: value })}
             items={timeOptions}
-            placeholder={{ label: "Vælg tidspunkt", value: null }}
-            style={pickerSelectStyles}
             value={newTask.timeOfExecution}
-          />
-        </View>
-
-        {/* Forventet tid for opgave (scroll menu) */}
-        <View style={styles.row}>
-          <Text style={styles.label}>Forventet tid for opgave</Text>
-          <RNPickerSelect
-            onValueChange={(value) =>
-              changeTextInput("aproxTimeForTask", value)
-            }
-            items={aproxTimeOptions}
-            placeholder={{ label: "Vælg forventet tid", value: null }}
             style={pickerSelectStyles}
-            value={newTask.aproxTimeForTask}
+            placeholder={{ label: "Vælg tidspunkt", value: null }}
           />
         </View>
 
-        {/* Status (scroll menu) */}
+        {/* Omtrentlig tid for opgave */}
+        <View style={styles.row}>
+          <Text style={styles.label}>Omtrentlig tid for opgave</Text>
+          <TextInput
+            value={newTask.aproxTimeForTask}
+            onChangeText={(event) => setNewTask({ ...newTask, aproxTimeForTask: event })}
+            placeholder="Indtast omtrentlig tid for opgave"
+            style={styles.input}
+          />
+        </View>
+
+        {/* Status */}
         <View style={styles.row}>
           <Text style={styles.label}>Status</Text>
           <RNPickerSelect
-            onValueChange={(value) => changeTextInput("status", value)}
+            onValueChange={(value) => setNewTask({ ...newTask, status: value })}
             items={statusOptions}
-            placeholder={{ label: "Vælg status", value: null }}
+            value={newTask.status}
             style={pickerSelectStyles}
-            value={newTask.status} // Bind statusværdi til picker
+            placeholder={{ label: "Vælg status", value: null }}
           />
         </View>
 
-        {/* Gem ændringer / Tilføj opgave knap */}
+        {/* Billede */}
+        {newTask.photoUri && (
+          <Image source={{ uri: newTask.photoUri }} style={styles.image} />
+        )}
         <Button
-          title={isEditTask ? "Gem ændringer" : "Tilføj opgave"}
-          onPress={() => handleSave()}
+          title="Tilføj Billede"
+          onPress={() => navigation.navigate('Kamera')}
         />
+
+        {/* Gem opgave */}
+        <Button title={isEditTask ? "Opdater Opgave" : "Tilføj Opgave"} onPress={handleSave} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-export default Add_edit_task;
-
-// Tilpasning af stil til picker-select
-const pickerSelectStyles = StyleSheet.create({
-  inputIOS: {
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "gray",
-    borderRadius: 5,
-    color: "black",
-    paddingRight: 30, // Til plads til dropdown-pil
-  },
-  inputAndroid: {
-    fontSize: 16,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderWidth: 0.5,
-    borderColor: "gray",
-    borderRadius: 5,
-    color: "black",
-    paddingRight: 30, // Til plads til dropdown-pil
-  },
-});
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    padding: 20,
+    padding: 16,
   },
   header: {
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 20,
-    textAlign: "center",
+    textAlign: 'center',
   },
   row: {
-    marginVertical: 15,
+    marginBottom: 12,
   },
   label: {
-    fontWeight: "bold",
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 4,
   },
   input: {
+    height: 40,
+    borderColor: "gray",
     borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-    fontSize: 16,
-    backgroundColor: "#f9f9f9",
+    paddingLeft: 8,
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    marginBottom: 12,
   },
 });
+
+const pickerSelectStyles = StyleSheet.create({
+  inputIOS: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingLeft: 8,
+  },
+  inputAndroid: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 12,
+    paddingLeft: 8,
+  },
+});
+
+export default Add_edit_task;

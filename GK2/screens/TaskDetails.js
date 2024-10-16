@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Text, Platform, StyleSheet, Button, Alert } from "react-native";
+import { View, Text, Platform, StyleSheet, Button, Alert, Image } from "react-native";
 import { useEffect, useState } from "react";
 import { getDatabase, ref, remove } from "firebase/database";
 
@@ -91,6 +91,16 @@ function TaskDetails({ route, navigation }) {
             ? "I gang"
             : "Afsluttet"}
         </Text>
+      
+      </View>
+      <View style={styles.row}>
+
+      {task.photoUri && (
+        <>
+          <Text style={styles.label}>Billede:</Text>
+          <Image source={{ uri: task.photoUri }} style={styles.image} />
+        </>
+      )}
       </View>
 
       <StatusBar style="auto" />
@@ -120,5 +130,10 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     color: "#333",
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    marginTop: 10,
   },
 });
