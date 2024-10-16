@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, FlatList, StyleSheet, Modal, Button } from 'react-native';
+import { View, Text, TouchableOpacity, FlatList, StyleSheet, Modal, Button, RefreshControl } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { getDatabase, ref, onValue, off } from "firebase/database";
 
@@ -8,6 +8,7 @@ const TaskList = ({ navigation }) => {
   const [taskKeys, setTaskKeys] = useState([]);
   const [selectedAssignee, setSelectedAssignee] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     const db = getDatabase();
