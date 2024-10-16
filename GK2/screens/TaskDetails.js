@@ -19,7 +19,7 @@ function TaskDetails({ route, navigation }) {
   const handleEdit = () => {
     // Vi navigerer videre til EditTask skærmen og sender opgaven videre med
     const task = route.params.task;
-    navigation.navigate("Edit Task", { task });
+    navigation.navigate("Rediger opgave", { task });
   };
  
   const confirmDelete = () => {

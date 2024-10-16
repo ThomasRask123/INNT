@@ -48,7 +48,7 @@ const HomeTabs = () => (
   <Tab.Navigator>
     <Tab.Screen name="Hustandens opgaver" component={TaskList} />
     <Tab.Screen name="Tilføj opgaver" component={Add_edit_task} />
-    <Tab.Screen name="Kamera" component={CameraScreen} />
+    {/* <Tab.Screen name="Kamera" component={CameraScreen} /> */}
     <Tab.Screen name="Mine opgaver" component={MyTasks} /> 
   </Tab.Navigator>
 );
@@ -95,9 +95,10 @@ export default function App() {
           component={TaskDetails} 
         />
         <Stack.Screen 
-          name="Edit Task" 
+          name="Rediger opgave" 
           component={Add_edit_task} 
         />
+        <Stack.Screen name="Kamera" component={CameraScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

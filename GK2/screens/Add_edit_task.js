@@ -33,7 +33,7 @@ function Add_edit_task({ navigation, route }) {
 
   const [newTask, setNewTask] = useState(initialState);
 
-  const isEditTask = route.name === "Edit Task";
+  const isEditTask = route.name === "Rediger opgave";
 
   useEffect(() => {
     if (isEditTask && route.params?.task) {
