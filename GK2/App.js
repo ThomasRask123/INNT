@@ -44,10 +44,10 @@ const Tab = createBottomTabNavigator();
 // Home-tabs opsætning
 const HomeTabs = () => (
   <Tab.Navigator>
-    <Tab.Screen name="TaskList" component={TaskList} />
-    <Tab.Screen name="AddEditTask" component={Add_edit_task} />
-    <Tab.Screen name="Camera" component={CameraScreen} />
-    <Tab.Screen name="MyTasks" component={MyTasks} /> 
+    <Tab.Screen name="Hustandens opgaver" component={TaskList} />
+    <Tab.Screen name="Tilføj opgaver" component={Add_edit_task} />
+    <Tab.Screen name="Kamera" component={CameraScreen} />
+    <Tab.Screen name="Mine opgaver" component={MyTasks} /> 
   </Tab.Navigator>
 );
 
@@ -56,9 +56,9 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Home" component={HomeTabs} />
-        <Stack.Screen name="TaskDetails" component={TaskDetails} />
+        <Stack.Screen name="Opret" component={RegisterScreen} />
+        <Stack.Screen name="Hjem" component={HomeTabs} />
+        <Stack.Screen name="Detaljer" component={TaskDetails} />
       </Stack.Navigator>
     </NavigationContainer>
   );

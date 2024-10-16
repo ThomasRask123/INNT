@@ -15,7 +15,7 @@ const LoginScreen = () => {
         // Signed in
         const user = userCredential.user;
         console.log('User logged in:', user);
-        navigation.navigate('Home');
+        navigation.navigate('Hjem');
       })
       .catch((error) => {
         console.error('Error logging in:', error);
@@ -40,8 +40,8 @@ const LoginScreen = () => {
       />
       <Button title="Login" onPress={handleLogin} />
       <Button
-        title="Register"
-        onPress={() => navigation.navigate('Register')}
+        title="Opret"
+        onPress={() => navigation.navigate('Opret')}
       />
     </View>
   );
