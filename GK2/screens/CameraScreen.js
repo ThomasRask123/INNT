@@ -58,14 +58,14 @@ const CameraScreen = ({ navigation }) => {
       <Camera style={styles.camera} type={type} ref={cameraRef}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={toggleCameraType}>
-            <Text style={styles.text}>Flip Camera</Text>
+            <Text style={styles.text}>Vend kamera</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={takePicture}>
-            <Text style={styles.text}>Take Picture</Text>
+            <Text style={styles.text}>Tag billede</Text>
           </TouchableOpacity>
           {photoUri && (
             <TouchableOpacity style={styles.button} onPress={savePicture}>
-              <Text style={styles.text}>Save Picture</Text>
+              <Text style={styles.text}>Gem billede</Text>
             </TouchableOpacity>
           )}
         </View>
