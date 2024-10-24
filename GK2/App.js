@@ -23,13 +23,13 @@ import { initializeAuth, getReactNativePersistence } from "firebase/auth";
 
 // Firebase konfiguration
 const firebaseConfig = {
-  apiKey: "AIzaSyBGC7F3aNLev7zuzY_D1O6UvuqtZnzB8vY",
-  authDomain: "godkend1-a0cf4.firebaseapp.com",
-  databaseURL: "https://godkend1-a0cf4-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "godkend1-a0cf4",
-  storageBucket: "godkend1-a0cf4.appspot.com",
-  messagingSenderId: "198182813324",
-  appId: "1:198182813324:web:21576941f3bc2ee563c5a9",
+  apiKey: "AIzaSyAbpPt4y-k7_3HB_rsVfUdNcDguiEygetA",
+  authDomain: "gk-2-465eb.firebaseapp.com",
+  projectId: "gk-2-465eb",
+  storageBucket: "gk-2-465eb.appspot.com",
+  messagingSenderId: "851048690218",
+  appId: "1:851048690218:web:2824445616221e347cc953",
+  databaseURL: "https://gk-2-465eb-default-rtdb.europe-west1.firebasedatabase.app/"
 };
 
 // Tjekker, om Firebase allerede er initialiseret

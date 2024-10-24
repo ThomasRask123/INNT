@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { View, Text, Platform, StyleSheet, Button, Alert, Image } from "react-native";
+import { View, Text, Platform, StyleSheet, Button, Alert, Image, ScrollView } from "react-native";
 import { useEffect, useState } from "react";
 import { getDatabase, ref, remove } from "firebase/database";
 
@@ -53,6 +53,7 @@ function TaskDetails({ route, navigation }) {
 
   // Returner alt indholdet
   return (
+    <ScrollView contentContainerStyle={styles.container}>
     <View style={styles.container}>
       <Button title="Rediger" onPress={() => handleEdit()} />
       <Button title="Slet" onPress={() => confirmDelete()} />
@@ -105,6 +106,7 @@ function TaskDetails({ route, navigation }) {
 
       <StatusBar style="auto" />
     </View>
+    </ScrollView>
   );
 }
 
@@ -133,7 +135,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 600,
+    height: '100%',
     marginTop: 10,
   },
 });
