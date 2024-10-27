@@ -33,4 +33,5 @@
 To test the app:
 1. Download the Code
 2. Navigate to the code directory in your terminal (GK2)
-3. Run npx expo start 
+3. Run npm install
+4. Run npx expo start
