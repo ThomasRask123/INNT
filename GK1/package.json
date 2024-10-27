@@ -1,5 +1,5 @@
 {
-  "name": "05_firebase_code",
+  "name": "GK1",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
@@ -14,6 +14,7 @@
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",
     "firebase": "^10.13.1",
+    "openai": "^4.65.0",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-picker-select": "^9.3.1",
